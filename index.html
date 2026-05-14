@@ -26,22 +26,9 @@
             margin-bottom: 32px;
         }
 
-        .header .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-
-        .header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .header p {
-            font-size: 14px;
-            color: #888;
-            margin-top: 6px;
-        }
+        .header .icon { font-size: 56px; margin-bottom: 12px; }
+        .header h1 { font-size: 26px; font-weight: 700; color: #ffffff; }
+        .header p { font-size: 14px; color: #888; margin-top: 6px; }
 
         .section {
             background: #1c1c1e;
@@ -57,15 +44,9 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .field {
-            margin-bottom: 14px;
-        }
-
+        .field { margin-bottom: 14px; }
         .field:last-child { margin-bottom: 0; }
 
         .field label {
@@ -90,13 +71,57 @@
         }
 
         .field input:focus,
-        .field select:focus {
-            border-color: #0a84ff;
+        .field select:focus { border-color: #0a84ff; }
+        .field input::placeholder { color: #555; }
+        .field select option { background: #2c2c2e; }
+
+        .photo-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
-        .field input::placeholder { color: #555; }
+        .photo-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #2c2c2e;
+            border: 2px dashed #3a3a3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
 
-        .field select option { background: #2c2c2e; }
+        .photo-circle:hover { border-color: #0a84ff; }
+        .photo-circle.has-photo { border: 2px solid #30d158; }
+
+        .photo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-btn {
+            font-size: 14px;
+            color: #0a84ff;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px 8px;
+        }
+
+        .photo-required {
+            font-size: 12px;
+            color: #ff453a;
+            display: none;
+        }
+
+        input[type="file"] { display: none; }
 
         .btn-submit {
             width: 100%;
@@ -146,6 +171,22 @@
         </div>
 
         <div id="form-content">
+
+            <!-- Photo -->
+            <div class="section">
+                <div class="section-title">📸 Photo de profil <span class="required">*</span></div>
+                <div class="photo-center">
+                    <div class="photo-circle" id="photo-circle" onclick="document.getElementById('photo-input').click()">
+                        <span id="photo-emoji">👤</span>
+                        <img id="photo-preview" src="" style="display:none;">
+                    </div>
+                    <button class="photo-btn" type="button" onclick="document.getElementById('photo-input').click()">
+                        Choisir une photo
+                    </button>
+                    <span class="photo-required" id="photo-required">⚠️ La photo est obligatoire</span>
+                    <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(event)">
+                </div>
+            </div>
 
             <!-- Identité -->
             <div class="section">
@@ -201,24 +242,13 @@
             <!-- Réseaux sociaux -->
             <div class="section">
                 <div class="section-title">🌐 Réseaux sociaux</div>
-
                 <div class="field">
                     <label>Instagram</label>
                     <input type="text" id="instagram" placeholder="@username">
                 </div>
-
-                <div class="field">
-                    <label>LinkedIn</label>
-                    <input type="text" id="linkedin" placeholder="Profil LinkedIn">
-                </div>
-
-                <div class="field">
-                    <label>IMDb</label>
-                    <input type="text" id="imdb" placeholder="Profil IMDb">
-                </div>
             </div>
 
-            <p class="error-msg" id="error-msg">⚠️ Merci de remplir au moins le prénom, le nom et le métier.</p>
+            <p class="error-msg" id="error-msg">⚠️ Merci de remplir les champs obligatoires (photo, prénom, nom, métier).</p>
 
             <button class="btn-submit" id="btn-submit" onclick="submitForm()">
                 ✅ Envoyer ma fiche
@@ -239,16 +269,56 @@
         const SUPABASE_URL = 'https://pwainatlfilxrzlrphqo.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YWluYXRsZmlseHJ6bHJwaHFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NjYzMzcsImV4cCI6MjA5NDI0MjMzN30.WtPX3GhYWgTRmAr-Kgk6hUyO-TH0QLMYRs3OR-iX2GU';
 
+        let photoBase64 = null;
+
+        function handlePhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX = 400;
+                    let w = img.width, h = img.height;
+                    if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+                    else { w = Math.round(w * MAX / h); h = MAX; }
+                    canvas.width = w;
+                    canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    photoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    const preview = document.getElementById('photo-preview');
+                    preview.src = photoBase64;
+                    preview.style.display = 'block';
+                    document.getElementById('photo-emoji').style.display = 'none';
+                    document.getElementById('photo-circle').classList.add('has-photo');
+                    document.getElementById('photo-required').style.display = 'none';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         async function submitForm() {
             const prenom = document.getElementById('prenom').value.trim();
             const nom = document.getElementById('nom').value.trim();
             const categorie = document.getElementById('categorie').value;
 
-            // Validation
+            let valid = true;
+
+            if (!photoBase64) {
+                document.getElementById('photo-required').style.display = 'block';
+                valid = false;
+            }
+
             if (!prenom || !nom || !categorie) {
                 document.getElementById('error-msg').style.display = 'block';
-                return;
+                valid = false;
             }
+
+            if (!valid) return;
 
             document.getElementById('error-msg').style.display = 'none';
             const btn = document.getElementById('btn-submit');
@@ -263,8 +333,7 @@
                 telephone: document.getElementById('telephone').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 instagram: document.getElementById('instagram').value.trim(),
-                linkedin: document.getElementById('linkedin').value.trim(),
-                imdb: document.getElementById('imdb').value.trim(),
+                photo: photoBase64,
                 lu: false
             };
 
