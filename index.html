@@ -75,6 +75,34 @@
         .field input::placeholder { color: #555; }
         .field select option { background: #2c2c2e; }
 
+        /* Categories chips */
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: #2c2c2e;
+            border: 1px solid #3a3a3c;
+            color: #f0f0f0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .chip.selected {
+            background: #0a84ff;
+            border-color: #0a84ff;
+            color: white;
+        }
+
+        .chip:hover { border-color: #0a84ff; }
+
+        /* Photo upload */
         .photo-center {
             display: flex;
             flex-direction: column;
@@ -141,6 +169,12 @@
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
 
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
         .success {
             display: none;
             text-align: center;
@@ -159,6 +193,8 @@
         }
 
         .required { color: #0a84ff; }
+
+        #roles-section { display: none; }
     </style>
 </head>
 <body>
@@ -170,7 +206,9 @@
             <p>Remplis ta fiche de contact</p>
         </div>
 
-        <div id="form-content">
+        <div id="loading" class="loading">⏳ Chargement...</div>
+
+        <div id="form-content" style="display:none;">
 
             <!-- Photo -->
             <div class="section">
@@ -191,64 +229,103 @@
             <!-- Identité -->
             <div class="section">
                 <div class="section-title">👤 Identité</div>
-
                 <div class="field">
                     <label>Prénom <span class="required">*</span></label>
                     <input type="text" id="prenom" placeholder="Ton prénom" autocomplete="given-name">
                 </div>
-
                 <div class="field">
                     <label>Nom <span class="required">*</span></label>
                     <input type="text" id="nom" placeholder="Ton nom" autocomplete="family-name">
                 </div>
-
                 <div class="field">
-                    <label>Métier <span class="required">*</span></label>
-                    <select id="categorie">
-                        <option value="">Choisis ton métier...</option>
-                        <option value="Réalisateur">Réalisateur</option>
-                        <option value="Acteur">Acteur</option>
-                        <option value="Technicien">Technicien</option>
-                        <option value="Producteur">Producteur</option>
-                        <option value="Compositeur">Compositeur</option>
-                        <option value="Agent">Agent</option>
-                        <option value="Studio">Studio</option>
-                        <option value="Client">Client</option>
-                        <option value="Autre">Autre</option>
-                    </select>
+                    <label>Localisation</label>
+                    <input type="text" id="localisation" placeholder="Paris, Lyon...">
                 </div>
+            </div>
 
-                <div class="field">
-                    <label>Rôle / Spécialité</label>
-                    <input type="text" id="role" placeholder="Ex: Chef opérateur, Monteur...">
+            <!-- Catégories dynamiques -->
+            <div class="section">
+                <div class="section-title">🎬 Catégorie <span class="required">*</span></div>
+                <div class="chips" id="categories-chips">
+                    <!-- chargé dynamiquement -->
+                </div>
+            </div>
+
+            <!-- Rôles dynamiques -->
+            <div class="section" id="roles-section">
+                <div class="section-title">🎭 Rôle</div>
+                <div class="chips" id="roles-chips">
+                    <!-- chargé dynamiquement -->
                 </div>
             </div>
 
             <!-- Contact -->
             <div class="section">
                 <div class="section-title">📞 Contact</div>
-
                 <div class="field">
                     <label>Téléphone</label>
                     <input type="tel" id="telephone" placeholder="+33 6 00 00 00 00" autocomplete="tel">
                 </div>
-
                 <div class="field">
                     <label>Email</label>
                     <input type="email" id="email" placeholder="ton@email.com" autocomplete="email">
                 </div>
-            </div>
-
-            <!-- Réseaux sociaux -->
-            <div class="section">
-                <div class="section-title">🌐 Réseaux sociaux</div>
                 <div class="field">
                     <label>Instagram</label>
                     <input type="text" id="instagram" placeholder="@username">
                 </div>
+                <div class="field">
+                    <label>Site web</label>
+                    <input type="text" id="site_web" placeholder="https://...">
+                </div>
             </div>
 
-            <p class="error-msg" id="error-msg">⚠️ Merci de remplir les champs obligatoires (photo, prénom, nom, métier).</p>
+            <!-- Statut pro -->
+            <div class="section">
+                <div class="section-title">💼 Statut professionnel</div>
+                <div class="field">
+                    <label>Statut</label>
+                    <select id="statut_pro">
+                        <option value="">Choisis ton statut...</option>
+                        <option value="Freelance">Freelance</option>
+                        <option value="Intermittent">Intermittent</option>
+                        <option value="Salarié">Salarié</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Tarif par jour (€)</label>
+                    <input type="text" id="tarif_jour" placeholder="Ex: 450€">
+                </div>
+                <div class="field">
+                    <label>Permis</label>
+                    <input type="text" id="permis" placeholder="Ex: B, C...">
+                </div>
+            </div>
+
+            <!-- Matériel -->
+            <div class="section">
+                <div class="section-title">🎥 Matériel</div>
+                <div class="field">
+                    <label>Matériel disponible</label>
+                    <input type="text" id="matos" placeholder="Ex: Sony FX3, DJI Ronin...">
+                </div>
+            </div>
+
+            <!-- Connaissance -->
+            <div class="section">
+                <div class="section-title">🤝 Connaissance commune</div>
+                <div class="field">
+                    <label>Nom de la connaissance</label>
+                    <input type="text" id="connaissance" placeholder="Qui vous a mis en contact ?">
+                </div>
+                <div class="field">
+                    <label>Téléphone connaissance</label>
+                    <input type="tel" id="tel_connaissance" placeholder="+33 6 00 00 00 00">
+                </div>
+            </div>
+
+            <p class="error-msg" id="error-msg">⚠️ Merci de remplir les champs obligatoires (photo, prénom, nom, catégorie).</p>
 
             <button class="btn-submit" id="btn-submit" onclick="submitForm()">
                 ✅ Envoyer ma fiche
@@ -270,11 +347,80 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YWluYXRsZmlseHJ6bHJwaHFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NjYzMzcsImV4cCI6MjA5NDI0MjMzN30.WtPX3GhYWgTRmAr-Kgk6hUyO-TH0QLMYRs3OR-iX2GU';
 
         let photoBase64 = null;
+        let categoriesData = [];
+        let selectedCategorie = null;
+        let selectedRole = null;
+
+        // Chargement des catégories depuis Supabase
+        async function loadCategories() {
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=nom`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                categoriesData = await res.json();
+                renderCategories();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('form-content').style.display = 'block';
+            } catch(e) {
+                document.getElementById('loading').textContent = '❌ Erreur de chargement';
+            }
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories-chips');
+            container.innerHTML = '';
+            categoriesData.forEach(cat => {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.textContent = cat.nom;
+                chip.onclick = () => selectCategorie(cat, chip);
+                container.appendChild(chip);
+            });
+        }
+
+        function selectCategorie(cat, chipEl) {
+            // Reset
+            document.querySelectorAll('#categories-chips .chip').forEach(c => c.classList.remove('selected'));
+            chipEl.classList.add('selected');
+            selectedCategorie = cat.nom;
+            selectedRole = null;
+
+            // Affiche les rôles
+            const roles = cat.roles || [];
+            const rolesSection = document.getElementById('roles-section');
+            const rolesContainer = document.getElementById('roles-chips');
+            rolesContainer.innerHTML = '';
+
+            if (roles.length > 0) {
+                rolesSection.style.display = 'block';
+                roles.forEach(role => {
+                    const chip = document.createElement('div');
+                    chip.className = 'chip';
+                    chip.textContent = role;
+                    chip.onclick = () => selectRole(role, chip);
+                    rolesContainer.appendChild(chip);
+                });
+            } else {
+                rolesSection.style.display = 'none';
+            }
+        }
+
+        function selectRole(role, chipEl) {
+            document.querySelectorAll('#roles-chips .chip').forEach(c => c.classList.remove('selected'));
+            if (selectedRole === role) {
+                selectedRole = null;
+            } else {
+                chipEl.classList.add('selected');
+                selectedRole = role;
+            }
+        }
 
         function handlePhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -288,7 +434,6 @@
                     canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                     photoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-
                     const preview = document.getElementById('photo-preview');
                     preview.src = photoBase64;
                     preview.style.display = 'block';
@@ -304,20 +449,16 @@
         async function submitForm() {
             const prenom = document.getElementById('prenom').value.trim();
             const nom = document.getElementById('nom').value.trim();
-            const categorie = document.getElementById('categorie').value;
-
             let valid = true;
 
             if (!photoBase64) {
                 document.getElementById('photo-required').style.display = 'block';
                 valid = false;
             }
-
-            if (!prenom || !nom || !categorie) {
+            if (!prenom || !nom || !selectedCategorie) {
                 document.getElementById('error-msg').style.display = 'block';
                 valid = false;
             }
-
             if (!valid) return;
 
             document.getElementById('error-msg').style.display = 'none';
@@ -326,13 +467,21 @@
             btn.textContent = '⏳ Envoi en cours...';
 
             const data = {
-                prenom: prenom,
-                nom: nom,
-                categorie: categorie,
-                role: document.getElementById('role').value.trim(),
+                prenom,
+                nom,
+                categorie: selectedCategorie,
+                role: selectedRole || '',
                 telephone: document.getElementById('telephone').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 instagram: document.getElementById('instagram').value.trim(),
+                site_web: document.getElementById('site_web').value.trim(),
+                localisation: document.getElementById('localisation').value.trim(),
+                statut_pro: document.getElementById('statut_pro').value,
+                tarif_jour: document.getElementById('tarif_jour').value.trim(),
+                permis: document.getElementById('permis').value.trim(),
+                matos: document.getElementById('matos').value.trim(),
+                connaissance: document.getElementById('connaissance').value.trim(),
+                tel_connaissance: document.getElementById('tel_connaissance').value.trim(),
                 photo: photoBase64,
                 lu: false
             };
@@ -364,6 +513,9 @@
                 alert('Erreur réseau : ' + e.message);
             }
         }
+
+        // Lancement
+        loadCategories();
     </script>
 </body>
 </html>
