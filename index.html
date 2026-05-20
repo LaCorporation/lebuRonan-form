@@ -138,11 +138,12 @@
             <h1>Le BuRonan</h1>
             <p>Remplis ta fiche de contact</p>
         </div>
- 
+
         <div id="loading" class="loading">⏳ Chargement...</div>
- 
+
         <div id="form-content" style="display:none;">
- 
+
+            <!-- Photo -->
             <div class="section">
                 <div class="section-title">📸 Photo de profil <span class="required">*</span></div>
                 <div class="photo-center">
@@ -155,7 +156,8 @@
                     <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(event)">
                 </div>
             </div>
- 
+
+            <!-- Identité -->
             <div class="section">
                 <div class="section-title">👤 Identité</div>
                 <div class="field">
@@ -171,17 +173,20 @@
                     <input type="text" id="localisation" placeholder="Paris, Lyon...">
                 </div>
             </div>
- 
+
+            <!-- Catégories dynamiques -->
             <div class="section">
                 <div class="section-title">🎬 Catégorie <span class="required">*</span></div>
                 <div class="chips" id="categories-chips"></div>
             </div>
- 
+
+            <!-- Rôles dynamiques -->
             <div class="section" id="roles-section">
                 <div class="section-title">🎭 Rôle</div>
                 <div class="chips" id="roles-chips"></div>
             </div>
- 
+
+            <!-- Contact -->
             <div class="section">
                 <div class="section-title">📞 Contact</div>
                 <div class="field">
@@ -201,7 +206,8 @@
                     <input type="text" id="site_web" placeholder="https://...">
                 </div>
             </div>
- 
+
+            <!-- Statut pro -->
             <div class="section">
                 <div class="section-title">💼 Statut professionnel</div>
                 <div class="field">
@@ -223,48 +229,51 @@
                     <input type="text" id="permis" placeholder="Ex: B, C...">
                 </div>
             </div>
- 
+
+            <!-- Matériel -->
             <div class="section">
                 <div class="section-title">🎥 Matériel</div>
                 <div class="field">
                     <input type="text" id="matos" placeholder="Sony FX3, DJI Ronin...">
                 </div>
             </div>
- 
+
+            <!-- Connaissance interne -->
             <div class="section">
                 <div class="section-title">🤝 Recommandé par</div>
                 <div id="internes-chips" class="chips">
                     <span style="color:#555; font-size:13px;">Chargement...</span>
                 </div>
             </div>
- 
+
             <p class="error-msg" id="error-msg">⚠️ Merci de remplir les champs obligatoires (photo, prénom, nom, catégorie).</p>
- 
+
             <button class="btn-submit" id="btn-submit" onclick="submitForm()">
                 ✅ Envoyer ma fiche
             </button>
         </div>
- 
+
         <div class="success" id="success">
             <div class="check">✅</div>
             <h2>Fiche envoyée !</h2>
             <p>Tes informations ont bien été reçues.<br>Merci !</p>
         </div>
     </div>
- 
+
     <script>
         const SUPABASE_URL = 'https://pwainatlfilxrzlrphqo.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YWluYXRsZmlseHJ6bHJwaHFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NjYzMzcsImV4cCI6MjA5NDI0MjMzN30.WtPX3GhYWgTRmAr-Kgk6hUyO-TH0QLMYRs3OR-iX2GU';
- 
+
         let photoBase64 = null;
         let categoriesData = [];
         let internesData = [];
         let selectedCategorie = null;
         let selectedRole = null;
         let selectedInterne = null;
- 
+
         async function loadData() {
             try {
+                // Charge catégories et contacts internes en parallèle
                 const [catRes, internesRes] = await Promise.all([
                     fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=nom`, {
                         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -273,20 +282,20 @@
                         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
                     })
                 ]);
- 
+
                 categoriesData = await catRes.json();
                 internesData = await internesRes.json();
- 
+
                 renderCategories();
                 renderInternes();
- 
+
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('form-content').style.display = 'block';
             } catch(e) {
                 document.getElementById('loading').textContent = '❌ Erreur de chargement';
             }
         }
- 
+
         function renderCategories() {
             const container = document.getElementById('categories-chips');
             container.innerHTML = '';
@@ -298,7 +307,7 @@
                 container.appendChild(chip);
             });
         }
- 
+
         function renderInternes() {
             const container = document.getElementById('internes-chips');
             container.innerHTML = '';
@@ -306,13 +315,13 @@
                 container.innerHTML = '<span style="color:#555; font-size:13px;">Aucun contact interne disponible</span>';
                 return;
             }
-            
+            // Option "Aucun"
             const aucun = document.createElement('div');
             aucun.className = 'interne-chip selected';
             aucun.textContent = 'Aucun';
             aucun.onclick = () => selectInterne(null, aucun);
             container.appendChild(aucun);
- 
+
             internesData.forEach(interne => {
                 const chip = document.createElement('div');
                 chip.className = 'interne-chip';
@@ -321,18 +330,18 @@
                 container.appendChild(chip);
             });
         }
- 
+
         function selectCategorie(cat, chipEl) {
             document.querySelectorAll('#categories-chips .chip').forEach(c => c.classList.remove('selected'));
             chipEl.classList.add('selected');
             selectedCategorie = cat.nom;
             selectedRole = null;
- 
+
             const roles = cat.roles || [];
             const rolesSection = document.getElementById('roles-section');
             const rolesContainer = document.getElementById('roles-chips');
             rolesContainer.innerHTML = '';
- 
+
             if (roles.length > 0) {
                 rolesSection.style.display = 'block';
                 roles.forEach(role => {
@@ -346,25 +355,19 @@
                 rolesSection.style.display = 'none';
             }
         }
- 
+
         function selectRole(role, chipEl) {
-            const isAlreadySelected = chipEl.classList.contains('selected');
             document.querySelectorAll('#roles-chips .chip').forEach(c => c.classList.remove('selected'));
-            
-            if (isAlreadySelected) {
-                selectedRole = null;
-            } else {
-                chipEl.classList.add('selected');
-                selectedRole = role;
-            }
+            if (selectedRole === role) { selectedRole = null; }
+            else { chipEl.classList.add('selected'); selectedRole = role; }
         }
- 
+
         function selectInterne(interne, chipEl) {
             document.querySelectorAll('#internes-chips .interne-chip').forEach(c => c.classList.remove('selected'));
             chipEl.classList.add('selected');
             selectedInterne = interne;
         }
- 
+
         function handlePhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -391,21 +394,21 @@
             };
             reader.readAsDataURL(file);
         }
- 
+
         async function submitForm() {
             const prenom = document.getElementById('prenom').value.trim();
             const nom = document.getElementById('nom').value.trim();
             let valid = true;
- 
+
             if (!photoBase64) { document.getElementById('photo-required').style.display = 'block'; valid = false; }
             if (!prenom || !nom || !selectedCategorie) { document.getElementById('error-msg').style.display = 'block'; valid = false; }
             if (!valid) return;
- 
+
             document.getElementById('error-msg').style.display = 'none';
             const btn = document.getElementById('btn-submit');
             btn.disabled = true;
             btn.textContent = '⏳ Envoi en cours...';
- 
+
             const data = {
                 prenom, nom,
                 categorie: selectedCategorie,
@@ -424,7 +427,7 @@
                 photo: photoBase64,
                 lu: false
             };
- 
+
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/formulaire`, {
                     method: 'POST',
@@ -436,7 +439,7 @@
                     },
                     body: JSON.stringify(data)
                 });
- 
+
                 if (response.ok) {
                     document.getElementById('form-content').style.display = 'none';
                     document.getElementById('success').style.display = 'block';
@@ -452,7 +455,7 @@
                 alert('Erreur réseau : ' + e.message);
             }
         }
- 
+
         loadData();
     </script>
 </body>
