@@ -143,7 +143,6 @@
  
         <div id="form-content" style="display:none;">
  
-            <!-- Photo -->
             <div class="section">
                 <div class="section-title">📸 Photo de profil <span class="required">*</span></div>
                 <div class="photo-center">
@@ -157,7 +156,6 @@
                 </div>
             </div>
  
-            <!-- Identité -->
             <div class="section">
                 <div class="section-title">👤 Identité</div>
                 <div class="field">
@@ -174,19 +172,16 @@
                 </div>
             </div>
  
-            <!-- Catégories dynamiques -->
             <div class="section">
                 <div class="section-title">🎬 Catégorie <span class="required">*</span></div>
                 <div class="chips" id="categories-chips"></div>
             </div>
  
-            <!-- Rôles dynamiques -->
             <div class="section" id="roles-section">
                 <div class="section-title">🎭 Rôle</div>
                 <div class="chips" id="roles-chips"></div>
             </div>
  
-            <!-- Contact -->
             <div class="section">
                 <div class="section-title">📞 Contact</div>
                 <div class="field">
@@ -207,7 +202,6 @@
                 </div>
             </div>
  
-            <!-- Statut pro -->
             <div class="section">
                 <div class="section-title">💼 Statut professionnel</div>
                 <div class="field">
@@ -230,7 +224,6 @@
                 </div>
             </div>
  
-            <!-- Matériel -->
             <div class="section">
                 <div class="section-title">🎥 Matériel</div>
                 <div class="field">
@@ -238,7 +231,6 @@
                 </div>
             </div>
  
-            <!-- Connaissance interne -->
             <div class="section">
                 <div class="section-title">🤝 Recommandé par</div>
                 <div id="internes-chips" class="chips">
@@ -273,7 +265,6 @@
  
         async function loadData() {
             try {
-                // Charge catégories et contacts internes en parallèle
                 const [catRes, internesRes] = await Promise.all([
                     fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=nom`, {
                         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -315,7 +306,7 @@
                 container.innerHTML = '<span style="color:#555; font-size:13px;">Aucun contact interne disponible</span>';
                 return;
             }
-            // Option "Aucun"
+            
             const aucun = document.createElement('div');
             aucun.className = 'interne-chip selected';
             aucun.textContent = 'Aucun';
@@ -357,9 +348,15 @@
         }
  
         function selectRole(role, chipEl) {
+            const isAlreadySelected = chipEl.classList.contains('selected');
             document.querySelectorAll('#roles-chips .chip').forEach(c => c.classList.remove('selected'));
-            if (selectedRole === role) { selectedRole = null; }
-            else { chipEl.classList.add('selected'); selectedRole = role; }
+            
+            if (isAlreadySelected) {
+                selectedRole = null;
+            } else {
+                chipEl.classList.add('selected');
+                selectedRole = role;
+            }
         }
  
         function selectInterne(interne, chipEl) {
