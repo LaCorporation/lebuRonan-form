@@ -6,61 +6,40 @@
     <title>Le BuRonan — Fiche de contact</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0f0f0f;
+            background: #0D0B08;
             color: #f0f0f0;
             min-height: 100vh;
             padding: 20px;
         }
-
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px 0 60px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
+        .container { max-width: 500px; margin: 0 auto; padding: 20px 0 60px; }
+        .header { text-align: center; margin-bottom: 32px; }
         .header .icon { font-size: 56px; margin-bottom: 12px; }
-        .header h1 { font-size: 26px; font-weight: 700; color: #ffffff; }
+        .header h1 { font-size: 26px; font-weight: 700; color: #F5C842; }
         .header p { font-size: 14px; color: #888; margin-top: 6px; }
-
         .section {
-            background: #1c1c1e;
+            background: #111111;
             border-radius: 14px;
             padding: 20px;
             margin-bottom: 16px;
+            border: 1px solid #1E1E1E;
         }
-
         .section-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #888;
+            font-size: 11px;
+            font-weight: 700;
+            color: #555;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             margin-bottom: 14px;
         }
-
         .field { margin-bottom: 14px; }
         .field:last-child { margin-bottom: 0; }
-
-        .field label {
-            display: block;
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 6px;
-        }
-
-        .field input,
-        .field select {
+        .field label { display: block; font-size: 12px; color: #666; margin-bottom: 6px; }
+        .field input, .field select {
             width: 100%;
-            background: #2c2c2e;
-            border: 1px solid #3a3a3c;
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
             border-radius: 10px;
             padding: 12px 14px;
             color: #ffffff;
@@ -69,147 +48,101 @@
             transition: border-color 0.2s;
             -webkit-appearance: none;
         }
-
-        .field input:focus,
-        .field select:focus { border-color: #0a84ff; }
-        .field input::placeholder { color: #555; }
-        .field select option { background: #2c2c2e; }
-
-        /* Categories chips */
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
+        .field input:focus, .field select:focus { border-color: #F5C842; }
+        .field input::placeholder { color: #444; }
+        .field select option { background: #1A1A1A; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
         .chip {
             padding: 6px 14px;
             border-radius: 20px;
-            background: #2c2c2e;
-            border: 1px solid #3a3a3c;
-            color: #f0f0f0;
-            font-size: 14px;
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            color: #888;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             user-select: none;
+            letter-spacing: 0.5px;
         }
-
         .chip.selected {
-            background: #0a84ff;
-            border-color: #0a84ff;
-            color: white;
+            background: #F5C84220;
+            border-color: #F5C842;
+            color: #F5C842;
         }
-
-        .chip:hover { border-color: #0a84ff; }
-
-        /* Photo upload */
-        .photo-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .chip:hover { border-color: #F5C842; }
+        .photo-center { display: flex; flex-direction: column; align-items: center; gap: 12px; }
         .photo-circle {
-            width: 110px;
-            height: 110px;
+            width: 110px; height: 110px;
             border-radius: 50%;
-            background: #2c2c2e;
-            border: 2px dashed #3a3a3c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            overflow: hidden;
-            cursor: pointer;
+            background: #1A1A1A;
+            border: 2px dashed #2A2A2A;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; overflow: hidden; cursor: pointer;
             transition: border-color 0.2s;
         }
-
-        .photo-circle:hover { border-color: #0a84ff; }
-        .photo-circle.has-photo { border: 2px solid #30d158; }
-
-        .photo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
+        .photo-circle:hover { border-color: #F5C842; }
+        .photo-circle.has-photo { border: 2px solid #F5C842; }
+        .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
         .photo-btn {
-            font-size: 14px;
-            color: #0a84ff;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 4px 8px;
+            font-size: 14px; color: #F5C842; cursor: pointer;
+            background: none; border: none; padding: 4px 8px;
         }
-
-        .photo-required {
-            font-size: 12px;
-            color: #ff453a;
-            display: none;
-        }
-
+        .photo-required { font-size: 12px; color: #ff453a; display: none; }
         input[type="file"] { display: none; }
-
         .btn-submit {
             width: 100%;
-            background: #0a84ff;
-            color: white;
+            background: #F5C842;
+            color: #0D0B08;
             border: none;
             border-radius: 14px;
             padding: 16px;
             font-size: 17px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             margin-top: 8px;
             transition: opacity 0.2s, transform 0.1s;
         }
-
         .btn-submit:hover { opacity: 0.9; }
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #888;
-        }
-
-        .success {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
-
+        .loading { text-align: center; padding: 40px; color: #555; }
+        .success { display: none; text-align: center; padding: 40px 20px; }
         .success .check { font-size: 64px; margin-bottom: 16px; }
-        .success h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .success h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #F5C842; }
         .success p { color: #888; font-size: 15px; }
-
-        .error-msg {
-            color: #ff453a;
-            font-size: 13px;
-            margin-top: 8px;
-            display: none;
-        }
-
-        .required { color: #0a84ff; }
-
+        .error-msg { color: #ff453a; font-size: 13px; margin-top: 8px; display: none; }
+        .required { color: #F5C842; }
         #roles-section { display: none; }
+        .interne-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            color: #888;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .interne-chip.selected {
+            background: #30D15820;
+            border-color: #30D158;
+            color: #30D158;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-
         <div class="header">
             <div class="icon">🎬</div>
             <h1>Le BuRonan</h1>
             <p>Remplis ta fiche de contact</p>
         </div>
-
+ 
         <div id="loading" class="loading">⏳ Chargement...</div>
-
+ 
         <div id="form-content" style="display:none;">
-
+ 
             <!-- Photo -->
             <div class="section">
                 <div class="section-title">📸 Photo de profil <span class="required">*</span></div>
@@ -218,14 +151,12 @@
                         <span id="photo-emoji">👤</span>
                         <img id="photo-preview" src="" style="display:none;">
                     </div>
-                    <button class="photo-btn" type="button" onclick="document.getElementById('photo-input').click()">
-                        Choisir une photo
-                    </button>
+                    <button class="photo-btn" type="button" onclick="document.getElementById('photo-input').click()">Choisir une photo</button>
                     <span class="photo-required" id="photo-required">⚠️ La photo est obligatoire</span>
                     <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(event)">
                 </div>
             </div>
-
+ 
             <!-- Identité -->
             <div class="section">
                 <div class="section-title">👤 Identité</div>
@@ -242,33 +173,29 @@
                     <input type="text" id="localisation" placeholder="Paris, Lyon...">
                 </div>
             </div>
-
+ 
             <!-- Catégories dynamiques -->
             <div class="section">
                 <div class="section-title">🎬 Catégorie <span class="required">*</span></div>
-                <div class="chips" id="categories-chips">
-                    <!-- chargé dynamiquement -->
-                </div>
+                <div class="chips" id="categories-chips"></div>
             </div>
-
+ 
             <!-- Rôles dynamiques -->
             <div class="section" id="roles-section">
                 <div class="section-title">🎭 Rôle</div>
-                <div class="chips" id="roles-chips">
-                    <!-- chargé dynamiquement -->
-                </div>
+                <div class="chips" id="roles-chips"></div>
             </div>
-
+ 
             <!-- Contact -->
             <div class="section">
                 <div class="section-title">📞 Contact</div>
                 <div class="field">
                     <label>Téléphone</label>
-                    <input type="tel" id="telephone" placeholder="+33 6 00 00 00 00" autocomplete="tel">
+                    <input type="tel" id="telephone" placeholder="+33 6 00 00 00 00">
                 </div>
                 <div class="field">
                     <label>Email</label>
-                    <input type="email" id="email" placeholder="ton@email.com" autocomplete="email">
+                    <input type="email" id="email" placeholder="ton@email.com">
                 </div>
                 <div class="field">
                     <label>Instagram</label>
@@ -279,7 +206,7 @@
                     <input type="text" id="site_web" placeholder="https://...">
                 </div>
             </div>
-
+ 
             <!-- Statut pro -->
             <div class="section">
                 <div class="section-title">💼 Statut professionnel</div>
@@ -302,73 +229,73 @@
                     <input type="text" id="permis" placeholder="Ex: B, C...">
                 </div>
             </div>
-
+ 
             <!-- Matériel -->
             <div class="section">
                 <div class="section-title">🎥 Matériel</div>
                 <div class="field">
-                    <label>Matériel disponible</label>
-                    <input type="text" id="matos" placeholder="Ex: Sony FX3, DJI Ronin...">
+                    <input type="text" id="matos" placeholder="Sony FX3, DJI Ronin...">
                 </div>
             </div>
-
-            <!-- Connaissance -->
+ 
+            <!-- Connaissance interne -->
             <div class="section">
-                <div class="section-title">🤝 Connaissance commune</div>
-                <div class="field">
-                    <label>Nom de la connaissance</label>
-                    <input type="text" id="connaissance" placeholder="Qui vous a mis en contact ?">
-                </div>
-                <div class="field">
-                    <label>Téléphone connaissance</label>
-                    <input type="tel" id="tel_connaissance" placeholder="+33 6 00 00 00 00">
+                <div class="section-title">🤝 Recommandé par</div>
+                <div id="internes-chips" class="chips">
+                    <span style="color:#555; font-size:13px;">Chargement...</span>
                 </div>
             </div>
-
+ 
             <p class="error-msg" id="error-msg">⚠️ Merci de remplir les champs obligatoires (photo, prénom, nom, catégorie).</p>
-
+ 
             <button class="btn-submit" id="btn-submit" onclick="submitForm()">
                 ✅ Envoyer ma fiche
             </button>
-
         </div>
-
-        <!-- Succès -->
+ 
         <div class="success" id="success">
             <div class="check">✅</div>
             <h2>Fiche envoyée !</h2>
             <p>Tes informations ont bien été reçues.<br>Merci !</p>
         </div>
-
     </div>
-
+ 
     <script>
         const SUPABASE_URL = 'https://pwainatlfilxrzlrphqo.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3YWluYXRsZmlseHJ6bHJwaHFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NjYzMzcsImV4cCI6MjA5NDI0MjMzN30.WtPX3GhYWgTRmAr-Kgk6hUyO-TH0QLMYRs3OR-iX2GU';
-
+ 
         let photoBase64 = null;
         let categoriesData = [];
+        let internesData = [];
         let selectedCategorie = null;
         let selectedRole = null;
-
-        // Chargement des catégories depuis Supabase
-        async function loadCategories() {
+        let selectedInterne = null;
+ 
+        async function loadData() {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=nom`, {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
-                });
-                categoriesData = await res.json();
+                // Charge catégories et contacts internes en parallèle
+                const [catRes, internesRes] = await Promise.all([
+                    fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=nom`, {
+                        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    }),
+                    fetch(`${SUPABASE_URL}/rest/v1/contacts_internes?select=*&order=nom`, {
+                        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    })
+                ]);
+ 
+                categoriesData = await catRes.json();
+                internesData = await internesRes.json();
+ 
                 renderCategories();
+                renderInternes();
+ 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('form-content').style.display = 'block';
             } catch(e) {
                 document.getElementById('loading').textContent = '❌ Erreur de chargement';
             }
         }
-
+ 
         function renderCategories() {
             const container = document.getElementById('categories-chips');
             container.innerHTML = '';
@@ -380,20 +307,41 @@
                 container.appendChild(chip);
             });
         }
-
+ 
+        function renderInternes() {
+            const container = document.getElementById('internes-chips');
+            container.innerHTML = '';
+            if (internesData.length === 0) {
+                container.innerHTML = '<span style="color:#555; font-size:13px;">Aucun contact interne disponible</span>';
+                return;
+            }
+            // Option "Aucun"
+            const aucun = document.createElement('div');
+            aucun.className = 'interne-chip selected';
+            aucun.textContent = 'Aucun';
+            aucun.onclick = () => selectInterne(null, aucun);
+            container.appendChild(aucun);
+ 
+            internesData.forEach(interne => {
+                const chip = document.createElement('div');
+                chip.className = 'interne-chip';
+                chip.textContent = interne.nom;
+                chip.onclick = () => selectInterne(interne, chip);
+                container.appendChild(chip);
+            });
+        }
+ 
         function selectCategorie(cat, chipEl) {
-            // Reset
             document.querySelectorAll('#categories-chips .chip').forEach(c => c.classList.remove('selected'));
             chipEl.classList.add('selected');
             selectedCategorie = cat.nom;
             selectedRole = null;
-
-            // Affiche les rôles
+ 
             const roles = cat.roles || [];
             const rolesSection = document.getElementById('roles-section');
             const rolesContainer = document.getElementById('roles-chips');
             rolesContainer.innerHTML = '';
-
+ 
             if (roles.length > 0) {
                 rolesSection.style.display = 'block';
                 roles.forEach(role => {
@@ -407,17 +355,19 @@
                 rolesSection.style.display = 'none';
             }
         }
-
+ 
         function selectRole(role, chipEl) {
             document.querySelectorAll('#roles-chips .chip').forEach(c => c.classList.remove('selected'));
-            if (selectedRole === role) {
-                selectedRole = null;
-            } else {
-                chipEl.classList.add('selected');
-                selectedRole = role;
-            }
+            if (selectedRole === role) { selectedRole = null; }
+            else { chipEl.classList.add('selected'); selectedRole = role; }
         }
-
+ 
+        function selectInterne(interne, chipEl) {
+            document.querySelectorAll('#internes-chips .interne-chip').forEach(c => c.classList.remove('selected'));
+            chipEl.classList.add('selected');
+            selectedInterne = interne;
+        }
+ 
         function handlePhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -430,8 +380,7 @@
                     let w = img.width, h = img.height;
                     if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
                     else { w = Math.round(w * MAX / h); h = MAX; }
-                    canvas.width = w;
-                    canvas.height = h;
+                    canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                     photoBase64 = canvas.toDataURL('image/jpeg', 0.7);
                     const preview = document.getElementById('photo-preview');
@@ -445,30 +394,23 @@
             };
             reader.readAsDataURL(file);
         }
-
+ 
         async function submitForm() {
             const prenom = document.getElementById('prenom').value.trim();
             const nom = document.getElementById('nom').value.trim();
             let valid = true;
-
-            if (!photoBase64) {
-                document.getElementById('photo-required').style.display = 'block';
-                valid = false;
-            }
-            if (!prenom || !nom || !selectedCategorie) {
-                document.getElementById('error-msg').style.display = 'block';
-                valid = false;
-            }
+ 
+            if (!photoBase64) { document.getElementById('photo-required').style.display = 'block'; valid = false; }
+            if (!prenom || !nom || !selectedCategorie) { document.getElementById('error-msg').style.display = 'block'; valid = false; }
             if (!valid) return;
-
+ 
             document.getElementById('error-msg').style.display = 'none';
             const btn = document.getElementById('btn-submit');
             btn.disabled = true;
             btn.textContent = '⏳ Envoi en cours...';
-
+ 
             const data = {
-                prenom,
-                nom,
+                prenom, nom,
                 categorie: selectedCategorie,
                 role: selectedRole || '',
                 telephone: document.getElementById('telephone').value.trim(),
@@ -480,12 +422,12 @@
                 tarif_jour: document.getElementById('tarif_jour').value.trim(),
                 permis: document.getElementById('permis').value.trim(),
                 matos: document.getElementById('matos').value.trim(),
-                connaissance: document.getElementById('connaissance').value.trim(),
-                tel_connaissance: document.getElementById('tel_connaissance').value.trim(),
+                connaissance: selectedInterne ? selectedInterne.nom : '',
+                tel_connaissance: selectedInterne ? (selectedInterne.telephone || '') : '',
                 photo: photoBase64,
                 lu: false
             };
-
+ 
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/formulaire`, {
                     method: 'POST',
@@ -497,7 +439,7 @@
                     },
                     body: JSON.stringify(data)
                 });
-
+ 
                 if (response.ok) {
                     document.getElementById('form-content').style.display = 'none';
                     document.getElementById('success').style.display = 'block';
@@ -513,9 +455,8 @@
                 alert('Erreur réseau : ' + e.message);
             }
         }
-
-        // Lancement
-        loadCategories();
+ 
+        loadData();
     </script>
 </body>
 </html>
